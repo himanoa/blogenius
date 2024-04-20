@@ -12,6 +12,12 @@ pub struct Article {
     pub old_id: Option<String>
 }
 
+#[derive(Debug, Eq, PartialEq)]
+pub enum ArticleId {
+    OldId(String),
+    NewId(String)
+}
+
 impl Article {
     pub fn new(
         title: impl Into<String>,
@@ -34,14 +40,22 @@ impl Article {
         return render(&self.raw_body)
     }
 
-    pub fn id(&self) -> String {
-        return format!("{}-{}", self.title, self.date.to_utc().format("%Y/%m/%d-%H:%M")).to_string()
+    pub fn id(&self) -> ArticleId {
+        self.old_id.clone()
+            .map(|id| ArticleId::OldId(id))
+            .unwrap_or(
+                ArticleId::NewId(format!("{}-{}",
+                    &self.title,
+                    &self.date.to_utc().format("%Y/%m/%d-%H:%M")).to_string())
+                )
     }
 }
 
 #[cfg(test)]
 mod tests {
     use chrono::DateTime;
+
+    use crate::article::entity::ArticleId;
 
     use super::Article;
 
@@ -56,7 +70,7 @@ mod tests {
             None
         );
 
-        assert_eq!(article.id(), "foo-2022/01/30-12:00")
+        assert_eq!(article.id(), ArticleId::NewId("foo-2022/01/30-12:00".to_string()))
     }
 }
 
