@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 comrak = "0.22.0"
+handlebars = "5.1.2"
 indoc = "2.0.5"
