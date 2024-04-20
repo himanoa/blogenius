@@ -3,7 +3,7 @@ use comrak::{markdown_to_html_with_plugins, plugins::syntect::SyntectAdapterBuil
 
 pub type HtmlOutput = String;
 
-pub fn parse<'a>(body: &str) -> HtmlOutput {
+pub fn render<'a>(body: &str) -> HtmlOutput {
     return run_with(SyntectAdapterBuilder::new().theme("base16-ocean.dark"), body)
 }
 
@@ -19,12 +19,12 @@ fn run_with(builder: SyntectAdapterBuilder, body: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::markdown::parse;
+    use crate::markdown::render;
     use indoc::indoc;
 
     #[test]
     fn parse_should_be_return_to_heading () {
-        let html = parse("## Hello");
+        let html = render("## Hello");
 
         assert_eq!(html, "<h2>Hello</h2>\n")
     }
@@ -38,7 +38,7 @@ mod tests {
             }
             ```
         "};
-        let html = parse(codeblock);
+        let html = render(codeblock);
 
         let actual = "<pre style=\"background-color:#2b303b;\"><code class=\"language-rs\"><span style=\"color:#b48ead;\">fn </span><span style=\"color:#8fa1b3;\">main</span><span style=\"color:#c0c5ce;\">() -&gt; String {\n</span><span style=\"color:#c0c5ce;\">    &quot;</span><span style=\"color:#a3be8c;\">fooo</span><span style=\"color:#c0c5ce;\">&quot;\n</span><span style=\"color:#c0c5ce;\">}\n</span></code></pre>\n";
         assert_eq!(html, actual);
