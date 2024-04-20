@@ -60,7 +60,7 @@ mod tests {
     use super::Article;
 
     #[test]
-    pub fn test_id() {
+    pub fn test_id_should_be_return_to_new_id() {
         let article = Article::new(
             "foo",
             DateTime::parse_from_str("2022/01/30 21:00:00 +0900", "%Y/%m/%d %H:%M:%S %z").unwrap(),
@@ -71,6 +71,20 @@ mod tests {
         );
 
         assert_eq!(article.id(), ArticleId::NewId("foo-2022/01/30-12:00".to_string()))
+    }
+
+    #[test]
+    pub fn test_id_should_be_return_to_old_id() {
+        let article = Article::new(
+            "foo",
+            DateTime::parse_from_str("2022/01/30 21:00:00 +0900", "%Y/%m/%d %H:%M:%S %z").unwrap(),
+            true,
+            "himanoa",
+            "empty",
+            Some("1".to_string())
+        );
+
+        assert_eq!(article.id(), ArticleId::OldId("1".to_string()))
     }
 }
 
