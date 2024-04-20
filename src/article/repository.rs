@@ -1,5 +1,5 @@
 use super::entity::{Article, ArticleId};
 
-trait ArticleRepository {
-    fn resolve(id: ArticleId) -> Option<Article>;
+pub trait ArticleRepository {
+    fn resolve(&self, id: ArticleId) -> Option<Article>;
 }
