@@ -19,7 +19,7 @@ fn run_with(builder: SyntectAdapterBuilder, body: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::markdown::parser::parse;
+    use crate::markdown::parse;
     use indoc::indoc;
 
     #[test]
