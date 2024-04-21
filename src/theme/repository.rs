@@ -19,3 +19,9 @@ pub trait ThemeRepository {
     fn resolve(&self, id: &str) -> Result<Theme>;
     fn list(&self) -> Result<Vec<String>>;
 }
+
+pub trait HaveThemeRepository {
+    type ThemeRepository: ThemeRepository + Send + Sync + 'static;
+
+    fn theme_repository(&self) -> &Self::ThemeRepository;
+}
