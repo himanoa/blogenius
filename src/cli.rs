@@ -5,7 +5,10 @@ use clap::{Parser, Subcommand};
 #[command(propagate_version = true)]
 pub struct Cli {
     #[command[subcommand]]
-    pub(crate) command: Commands
+    pub(crate) command: Commands,
+
+    #[arg(short, long)]
+    config: Option<String>
 }
 
 #[derive(Subcommand, Debug)]
