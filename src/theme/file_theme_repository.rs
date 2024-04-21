@@ -1,5 +1,5 @@
 use anyhow::{bail, Result};
-use std::fs::read_dir;
+use std::fs::{read, read_dir, read_to_string};
 use std::path::PathBuf;
 
 use super::{
@@ -46,6 +46,10 @@ impl ThemeRepository for FileThemeRepository {
             })
             .collect();
         Ok(themes)
+    }
+
+    fn get_article_template(&self, id: &str) -> Result<String> {
+        Ok(read_to_string(self.resolve(id)?.article_template())?)
     }
 }
 

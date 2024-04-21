@@ -55,7 +55,7 @@ impl Article {
     where
         Title: Into<String>,
         Author: Into<String>,
-        RawBody: Into<String>
+        RawBody: Into<String>,
     {
         Article {
             id,

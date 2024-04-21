@@ -18,6 +18,7 @@ pub enum ThemeRepositoryListError {
 pub trait ThemeRepository {
     fn resolve(&self, id: &str) -> Result<Theme>;
     fn list(&self) -> Result<Vec<String>>;
+    fn get_article_template(&self, id: &str) -> Result<String>;
 }
 
 pub trait HaveThemeRepository {
