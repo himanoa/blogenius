@@ -1,14 +1,14 @@
-use std::path::PathBuf;
 use std::fs::read_to_string;
+use std::path::PathBuf;
 
 use anyhow::Result;
 use thiserror::Error;
 
+use crate::article::entity::{Article, ArticleId};
 use crate::article::repository::ArticleRepository;
-use crate::article::entity::{ArticleId, Article};
 
 pub struct FileArticleRepository {
-    root_path: PathBuf 
+    root_path: PathBuf,
 }
 
 impl FileArticleRepository {
@@ -20,7 +20,7 @@ impl FileArticleRepository {
 #[derive(Debug, Error, PartialEq, Eq)]
 pub enum FileArticleResolveError {
     #[error("article {:?} is not found", .0)]
-    NotFound(String)
+    NotFound(String),
 }
 impl ArticleRepository for FileArticleRepository {
     fn resolve(&self, id: ArticleId) -> Result<Article> {
@@ -34,11 +34,14 @@ impl ArticleRepository for FileArticleRepository {
 #[cfg(test)]
 pub mod tests {
 
-    use std::path::Path;
     use chrono::DateTime;
+    use std::path::Path;
 
-    use crate::article::{entity::{Article, ArticleId}, repository::ArticleRepository};
     use super::FileArticleRepository;
+    use crate::article::{
+        entity::{Article, ArticleId},
+        repository::ArticleRepository,
+    };
 
     #[test]
     fn resolve_should_be_return_to_none_when_not_exist() {
@@ -50,12 +53,13 @@ pub mod tests {
     fn resolve_should_be_return_to_article() {
         let repository = FileArticleRepository::new(Path::new(&"fixtures").to_path_buf());
         assert_eq!(
-            repository.resolve(
-                ArticleId::new("example")
-            ).expect("failed load example article"),
+            repository
+                .resolve(ArticleId::new("example"))
+                .expect("failed load example article"),
             Article::new(
                 "example",
-                DateTime::parse_from_str("2022/01/30 19:00:00 +0900", "%Y/%m/%d %H:%M:%S %z").expect("datetime"),
+                DateTime::parse_from_str("2022/01/30 19:00:00 +0900", "%Y/%m/%d %H:%M:%S %z")
+                    .expect("datetime"),
                 false,
                 "himanoa",
                 "<p>example</p>\n",
@@ -63,4 +67,4 @@ pub mod tests {
             )
         )
     }
-    }
+}

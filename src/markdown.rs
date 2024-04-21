@@ -1,26 +1,30 @@
-use comrak::{markdown_to_html_with_plugins, plugins::syntect::SyntectAdapterBuilder, Options, Plugins};
+use anyhow::Result;
+use comrak::{
+    markdown_to_html_with_plugins, plugins::syntect::SyntectAdapterBuilder, Options, Plugins,
+};
 use fronma::parser::parse;
 use thiserror::Error;
-use anyhow::Result;
-
 
 pub type HtmlOutput = String;
 
 #[derive(Debug, Error)]
 pub enum RenderError {
     #[error("failed extract header")]
-    FailedExtractHeader
+    FailedExtractHeader,
 }
 
 pub fn render<T>(body: &str) -> Result<(T, HtmlOutput)>
-where 
+where
     T: serde::de::DeserializeOwned,
 {
-    return run_with::<T>(SyntectAdapterBuilder::new().theme("base16-ocean.dark"), body)
+    return run_with::<T>(
+        SyntectAdapterBuilder::new().theme("base16-ocean.dark"),
+        body,
+    );
 }
 
 fn run_with<T>(builder: SyntectAdapterBuilder, body: &str) -> Result<(T, String)>
-where 
+where
     T: serde::de::DeserializeOwned,
 {
     let adapter = builder.build();
@@ -31,8 +35,10 @@ where
         .map_err(|_| RenderError::FailedExtractHeader)?;
     plugins.render.codefence_syntax_highlighter = Some(&adapter);
 
-
-    return Ok((headers, markdown_to_html_with_plugins(body_without_headers, &options, &plugins)));
+    return Ok((
+        headers,
+        markdown_to_html_with_plugins(body_without_headers, &options, &plugins),
+    ));
 }
 
 #[cfg(test)]
@@ -45,14 +51,14 @@ mod tests {
     struct Empty {}
 
     #[test]
-    fn parse_should_be_return_to_heading () {
+    fn parse_should_be_return_to_heading() {
         let html = render::<Empty>("---\nfoo: 12\n---\n## Hello");
 
         assert_eq!(html.unwrap().1, "<h2>Hello</h2>\n")
     }
 
     #[test]
-    fn parse_should_be_return_to_highlighted_codeblock () {
+    fn parse_should_be_return_to_highlighted_codeblock() {
         let codeblock = indoc! {"
             ---
             foo: 12

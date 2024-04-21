@@ -1,5 +1,5 @@
-pub mod markdown;
 pub mod article;
+pub mod markdown;
 
 fn main() {
     println!("Hello, world!");
