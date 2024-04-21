@@ -7,6 +7,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Article {
+    pub id: ArticleId,
     pub title: String,
     pub date: DateTime<FixedOffset>,
     pub draft: bool,
@@ -42,15 +43,22 @@ pub struct ArticleHeader {
 }
 
 impl Article {
-    pub fn new(
-        title: impl Into<String>,
+    pub fn new<Title, Author, RawBody>(
+        id: ArticleId,
+        title: Title,
         date: DateTime<FixedOffset>,
         draft: bool,
-        author: impl Into<String>,
-        raw_body: impl Into<String>,
+        author: Author,
+        raw_body: RawBody,
         old_id: Option<String>,
-    ) -> Article {
+    ) -> Article
+    where
+        Title: Into<String>,
+        Author: Into<String>,
+        RawBody: Into<String>
+    {
         Article {
+            id,
             title: title.into(),
             date,
             draft,
@@ -65,17 +73,19 @@ impl Article {
     }
 }
 
-impl TryFrom<(PathBuf, String)> for Article {
+impl TryFrom<(PathBuf, ArticleId, String)> for Article {
     type Error = anyhow::Error;
 
-    fn try_from(value: (PathBuf, String)) -> Result<Self, Self::Error> {
-        let (header, body) = render::<ArticleHeader>(&value.1)?;
+    fn try_from(value: (PathBuf, ArticleId, String)) -> Result<Self, Self::Error> {
+        let (header, body) = render::<ArticleHeader>(&value.2)?;
         let old_id = value
             .0
             .file_stem()
             .and_then(|st| st.to_str().and_then(|s| s.parse::<u64>().ok()))
             .map(|s| s.to_string());
+        let id = value.1;
         Ok(Article::new(
+            id,
             header.title,
             header.date,
             header.draft,
@@ -83,12 +93,5 @@ impl TryFrom<(PathBuf, String)> for Article {
             body,
             old_id,
         ))
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    pub fn test() {
-        assert_eq!(1 + 1, 2)
     }
 }

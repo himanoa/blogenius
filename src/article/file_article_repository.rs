@@ -26,7 +26,7 @@ impl ArticleRepository for FileArticleRepository {
     fn resolve(&self, id: ArticleId) -> Result<Article> {
         let path = self.root_path.join(format!("{}.md", *id));
         let file_body = read_to_string(&path)?;
-        let article = (path, file_body).try_into()?;
+        let article = (path, id, file_body).try_into()?;
         Ok(article)
     }
 }
@@ -57,6 +57,7 @@ pub mod tests {
                 .resolve(ArticleId::new("example"))
                 .expect("failed load example article"),
             Article::new(
+                ArticleId::new("example"),
                 "example",
                 DateTime::parse_from_str("2022/01/30 19:00:00 +0900", "%Y/%m/%d %H:%M:%S %z")
                     .expect("datetime"),
