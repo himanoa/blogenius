@@ -37,7 +37,8 @@ impl Article {
         }
     }
     pub fn body(&self) -> String {
-        return render(&self.raw_body)
+        todo!()
+        // return render(&self.raw_body)
     }
 
     pub fn id(&self) -> ArticleId {
