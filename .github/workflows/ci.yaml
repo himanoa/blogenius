@@ -20,10 +20,10 @@ jobs:
       with:
         toolchain: stable 
 
-    - name: Build ripgrep and all crates
+    - name: Build
       run: cargo build --verbose
 
-    - name: Run tests with PCRE2 (sans cross)
+    - name: Run tests
       run: cargo test --verbose
 
   rustfmt:
