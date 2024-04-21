@@ -1,4 +1,5 @@
 use clap::Parser;
+use config::Config;
 
 use crate::cli::{Cli, Commands};
 
@@ -11,8 +12,14 @@ pub mod theme;
 
 fn main() {
     let cli = Cli::parse();
+    let config = cli
+        .config
+        .and_then(|p| Config::load(p).ok())
+        .unwrap_or(Config::default());
+
     match &cli.command {
         Commands::Build => {
+            println!("{:?}", config);
             println!("exec build")
         }
     }

@@ -8,7 +8,7 @@ pub struct Cli {
     pub(crate) command: Commands,
 
     #[arg(short, long)]
-    config: Option<String>,
+    pub config: Option<String>,
 }
 
 #[derive(Subcommand, Debug)]

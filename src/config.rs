@@ -43,6 +43,12 @@ impl Config {
     }
 }
 
+impl Default for Config {
+    fn default() -> Self {
+        Config::new("dist", "articles", "theme", "default")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::Config;
