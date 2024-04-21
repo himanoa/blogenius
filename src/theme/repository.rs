@@ -6,7 +6,7 @@ use super::entity::Theme;
 #[derive(Debug, PartialEq, Eq, Error)]
 pub enum ThemeRepositoryResolveError {
     #[error("Theme({:?}) is not found", .0)]
-    NotFoundError(String)
+    NotFoundError(String),
 }
 
 pub trait ThemeRepository {

@@ -9,6 +9,10 @@ pub struct Theme {
 
 impl Theme {
     fn new(id: impl Into<String>, articles_path: PathBuf, article_path: PathBuf) -> Theme {
-        Theme { id: id.into(), article_path, articles_path }
+        Theme {
+            id: id.into(),
+            article_path,
+            articles_path,
+        }
     }
 }
