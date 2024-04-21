@@ -15,3 +15,4 @@ handlebars = "5.1.2"
 indoc = "2.0.5"
 serde = { version = "1.0.198", features = ["derive"]}
 thiserror = "1.0.59"
+toml = "0.8.12"

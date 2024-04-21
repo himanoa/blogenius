@@ -1,0 +1,4 @@
+dist_path = "dist"
+article_path = "articles"
+theme_path = "theme"
+theme = "foo"
