@@ -59,7 +59,9 @@ pub trait Renderer: HaveThemeRepository + HaveArticleRepository {
         let rendered = handlebars.render_template(&article_template, &provide_value)?;
         Ok(RenderResult {
             body: rendered,
-            dist_path: dist_path.into().join(article.title),
+            dist_path: dist_path
+                .into()
+                .join(format!("{}.html", article.id.to_string())),
         })
     }
 }
