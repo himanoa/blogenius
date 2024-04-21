@@ -120,6 +120,10 @@ mod tests {
                 None,
             ))
         }
+
+        fn list(&self) -> anyhow::Result<Vec<Article>> {
+            unreachable!()
+        }
     }
 
     struct TestKernal {}

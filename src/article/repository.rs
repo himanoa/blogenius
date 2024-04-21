@@ -3,6 +3,7 @@ use anyhow::Result;
 
 pub trait ArticleRepository {
     fn resolve(&self, id: ArticleId) -> Result<Article>;
+    fn list(&self) -> Result<Vec<Article>>;
 }
 
 pub trait HaveArticleRepository {

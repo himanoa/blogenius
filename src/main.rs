@@ -9,6 +9,7 @@ pub mod config;
 pub mod markdown;
 pub mod renderer;
 pub mod theme;
+pub mod command;
 
 fn main() {
     let cli = Cli::parse();
