@@ -57,16 +57,16 @@ mod tests {
 
     #[test]
     fn resolve_should_be_return_to_ok_and_theme_when_exist_theme_dir() {
-        let repository = FileThemeRepository::new("./fixtures/themes");
+        let repository = FileThemeRepository::new("fixtures/themes");
         assert_eq!(
             repository.resolve("dummy").unwrap(),
-            Theme::new("dummy", "./fixtures/themes/dummy")
+            Theme::new("dummy", "fixtures/themes/dummy")
         )
     }
 
     #[test]
     fn resolve_should_be_return_to_not_found_error_when_not_exist_theme_dir() {
-        let repository = FileThemeRepository::new("./fixtures/themes");
+        let repository = FileThemeRepository::new("fixtures/themes");
         assert_eq!(
             repository
                 .resolve("dummy_not_found")
