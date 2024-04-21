@@ -1,4 +1,8 @@
+use std::{ops::Deref, path::PathBuf};
+
 use chrono::{DateTime, FixedOffset};
+use anyhow::Result;
+use serde::Deserialize;
 use crate::markdown::render;
 
 #[derive(Debug, Eq, PartialEq)]
@@ -8,14 +12,33 @@ pub struct Article {
     pub draft: bool,
     pub author: String,
 
-    pub raw_body: String,
+    pub rendered_body: String,
     pub old_id: Option<String>
 }
 
 #[derive(Debug, Eq, PartialEq)]
-pub enum ArticleId {
-    OldId(String),
-    NewId(String)
+pub struct ArticleId(pub String);
+
+impl ArticleId {
+    pub fn new(id: impl Into<String>) -> ArticleId {
+        ArticleId(id.into())
+    }
+}
+
+impl Deref for ArticleId {
+    type Target = String;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+#[derive(Debug, Eq, PartialEq, Deserialize)]
+pub struct ArticleHeader {
+  title: String,
+  date: DateTime<FixedOffset>,
+  draft: bool,
+  author: String,
 }
 
 impl Article {
@@ -32,60 +55,32 @@ impl Article {
             date,
             draft,
             author: author.into(),
-            raw_body: raw_body.into(),
+            rendered_body: raw_body.into(),
             old_id: old_id.map(|i| i.into())
         }
     }
-    pub fn body(&self) -> String {
-        todo!()
-        // return render(&self.raw_body)
-    }
 
-    pub fn id(&self) -> ArticleId {
-        self.old_id.clone()
-            .map(|id| ArticleId::OldId(id))
-            .unwrap_or(
-                ArticleId::NewId(format!("{}-{}",
-                    &self.title,
-                    &self.date.to_utc().format("%Y/%m/%d-%H:%M")).to_string())
-                )
+    pub fn body(&self) -> Result<String> {
+        return Ok(self.rendered_body.clone())
+    }
+}
+
+impl TryFrom<(PathBuf, String)> for Article {
+    type Error = anyhow::Error;
+
+    fn try_from(value: (PathBuf, String)) -> Result<Self, Self::Error> {
+        let (header, body) = render::<ArticleHeader>(&value.1)?;
+        let old_id = value.0.file_stem().and_then(|st| {
+            st.to_str().and_then(|s| s.parse::<u64>().ok())
+        }).map(|s| s.to_string());
+        Ok(Article::new(header.title, header.date, header.draft, header.author, body, old_id))
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use chrono::DateTime;
-
-    use crate::article::entity::ArticleId;
-
-    use super::Article;
-
-    #[test]
-    pub fn test_id_should_be_return_to_new_id() {
-        let article = Article::new(
-            "foo",
-            DateTime::parse_from_str("2022/01/30 21:00:00 +0900", "%Y/%m/%d %H:%M:%S %z").unwrap(),
-            true,
-            "himanoa",
-            "empty",
-            None
-        );
-
-        assert_eq!(article.id(), ArticleId::NewId("foo-2022/01/30-12:00".to_string()))
-    }
-
-    #[test]
-    pub fn test_id_should_be_return_to_old_id() {
-        let article = Article::new(
-            "foo",
-            DateTime::parse_from_str("2022/01/30 21:00:00 +0900", "%Y/%m/%d %H:%M:%S %z").unwrap(),
-            true,
-            "himanoa",
-            "empty",
-            Some("1".to_string())
-        );
-
-        assert_eq!(article.id(), ArticleId::OldId("1".to_string()))
+    pub fn test() {
+        assert_eq!(1 + 1, 2)
     }
 }
 

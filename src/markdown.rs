@@ -1,6 +1,5 @@
 use comrak::{markdown_to_html_with_plugins, plugins::syntect::SyntectAdapterBuilder, Options, Plugins};
 use fronma::parser::parse;
-use serde::Deserialize;
 use thiserror::Error;
 use anyhow::Result;
 
