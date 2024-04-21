@@ -3,16 +3,14 @@ use std::path::PathBuf;
 #[derive(Debug, PartialEq, Eq)]
 pub struct Theme {
     id: String,
-    articles_path: PathBuf,
-    article_path: PathBuf,
+    theme_path: PathBuf,
 }
 
 impl Theme {
-    fn new(id: impl Into<String>, articles_path: PathBuf, article_path: PathBuf) -> Theme {
+    pub fn new(id: impl Into<String>, theme_path: impl Into<PathBuf>) -> Theme {
         Theme {
             id: id.into(),
-            article_path,
-            articles_path,
+            theme_path: theme_path.into(),
         }
     }
 }
