@@ -8,10 +8,10 @@ pub struct Cli {
     pub(crate) command: Commands,
 
     #[arg(short, long)]
-    config: Option<String>
+    config: Option<String>,
 }
 
 #[derive(Subcommand, Debug)]
 pub enum Commands {
-    Build
+    Build,
 }
