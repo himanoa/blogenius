@@ -2,8 +2,8 @@ use std::fs::read_to_string;
 use std::path::PathBuf;
 
 use anyhow::{bail, Context, Result};
-use thiserror::Error;
 use glob::{glob, Paths};
+use thiserror::Error;
 
 use crate::article::entity::{Article, ArticleId};
 use crate::article::repository::ArticleRepository;
@@ -36,10 +36,13 @@ impl ArticleRepository for FileArticleRepository {
         let paths = glob(&self.root_path.join("*.md").to_string_lossy())?
             .map(|entry| entry.context("Failed to get file path"))
             .collect::<Result<Vec<_>>>()?;
-        paths.into_iter().map(|p| {
-            let article_id = p.file_stem().expect("filestem is not found");
-            self.resolve(ArticleId::new(article_id.to_string_lossy()))
-        }).collect::<Result<Vec<Article>>>()
+        paths
+            .into_iter()
+            .map(|p| {
+                let article_id = p.file_stem().expect("filestem is not found");
+                self.resolve(ArticleId::new(article_id.to_string_lossy()))
+            })
+            .collect::<Result<Vec<Article>>>()
     }
 }
 
@@ -85,19 +88,17 @@ pub mod tests {
     fn list_should_be_return_to_articles() {
         let repository = FileArticleRepository::new(Path::new(&"fixtures").to_path_buf());
         let expected = vec![Article::new(
-                ArticleId::new("example"),
-                "example",
-                DateTime::parse_from_str("2022/01/30 19:00:00 +0900", "%Y/%m/%d %H:%M:%S %z")
-                    .expect("datetime"),
-                false,
-                "himanoa",
-                "<p>example</p>\n",
-                None
-            )];
+            ArticleId::new("example"),
+            "example",
+            DateTime::parse_from_str("2022/01/30 19:00:00 +0900", "%Y/%m/%d %H:%M:%S %z")
+                .expect("datetime"),
+            false,
+            "himanoa",
+            "<p>example</p>\n",
+            None,
+        )];
         assert_eq!(
-            repository
-                .list()
-                .expect("failed load example article"),
+            repository.list().expect("failed load example article"),
             expected
         )
     }
