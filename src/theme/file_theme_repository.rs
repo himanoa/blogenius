@@ -52,12 +52,13 @@ impl ThemeRepository for FileThemeRepository {
 #[cfg(test)]
 mod tests {
     use crate::theme::{entity::Theme, repository::ThemeRepository};
+    use std::{env::current_dir, path::PathBuf};
 
     use super::FileThemeRepository;
 
     #[test]
     fn resolve_should_be_return_to_ok_and_theme_when_exist_theme_dir() {
-        let repository = FileThemeRepository::new("fixtures/themes");
+        let repository = FileThemeRepository::new(PathBuf::new().join("fixtures").join("themes"));
         assert_eq!(
             repository.resolve("dummy").unwrap(),
             Theme::new("dummy", "fixtures/themes/dummy")
@@ -66,7 +67,7 @@ mod tests {
 
     #[test]
     fn resolve_should_be_return_to_not_found_error_when_not_exist_theme_dir() {
-        let repository = FileThemeRepository::new("fixtures/themes");
+        let repository = FileThemeRepository::new(PathBuf::new().join("fixtures").join("themes"));
         assert_eq!(
             repository
                 .resolve("dummy_not_found")
@@ -78,13 +79,15 @@ mod tests {
 
     #[test]
     fn list_should_be_return_to_ok_themes() {
-        let repository = FileThemeRepository::new("./fixtures/themes");
+        println!("{:?}", current_dir());
+        let repository = FileThemeRepository::new(PathBuf::new().join("fixtures").join("themes"));
         assert_eq!(repository.list().unwrap(), vec!["dummy"]);
     }
 
     #[test]
     fn list_should_be_return_to_err() {
-        let repository = FileThemeRepository::new("./fixtures/themes_not_found");
+        let repository =
+            FileThemeRepository::new(PathBuf::new().join("fixtures").join("themes_not_found"));
 
         assert_eq!(
             repository.list().unwrap_err().to_string(),
