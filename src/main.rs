@@ -12,10 +12,10 @@ pub mod cli;
 pub mod command;
 pub mod config;
 pub mod distributor;
+pub mod kernel;
 pub mod markdown;
 pub mod renderer;
 pub mod theme;
-pub mod kernel;
 
 fn main() {
     let cli = Cli::parse();
@@ -27,10 +27,12 @@ fn main() {
 
     match &cli.command {
         Commands::Build => {
-            build(&kernel, config).map_err(|e| {
-                eprintln!("{}", e);
-                process::exit(1)
-            }).unwrap();
+            build(&kernel, config)
+                .map_err(|e| {
+                    eprintln!("{}", e);
+                    process::exit(1)
+                })
+                .unwrap();
         }
     }
 }

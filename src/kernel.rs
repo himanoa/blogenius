@@ -1,10 +1,15 @@
-use crate::{article::{file_article_repository::FileArticleRepository, repository::HaveArticleRepository}, config::Config, distributor::{file_distributor::FileDistributor, interface::HaveDistributor}, theme::{file_theme_repository::FileThemeRepository, repository::HaveThemeRepository}};
+use crate::{
+    article::{file_article_repository::FileArticleRepository, repository::HaveArticleRepository},
+    config::Config,
+    distributor::{file_distributor::FileDistributor, interface::HaveDistributor},
+    theme::{file_theme_repository::FileThemeRepository, repository::HaveThemeRepository},
+};
 
 pub struct Kernel {
     file_article_repository: FileArticleRepository,
     file_theme_repository: FileThemeRepository,
     file_distributor: FileDistributor,
-    pub config: Config
+    pub config: Config,
 }
 
 impl Kernel {
@@ -13,7 +18,7 @@ impl Kernel {
             file_article_repository: FileArticleRepository::new(config.article_path.clone().into()),
             file_theme_repository: FileThemeRepository::new(&config.theme_path),
             file_distributor: FileDistributor::new(),
-            config
+            config,
         }
     }
 }
