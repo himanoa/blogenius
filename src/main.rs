@@ -1,5 +1,9 @@
+use std::process;
+
 use clap::Parser;
+use command::build::build;
 use config::Config;
+use kernel::Kernel;
 
 use crate::cli::{Cli, Commands};
 
@@ -11,6 +15,7 @@ pub mod distributor;
 pub mod markdown;
 pub mod renderer;
 pub mod theme;
+pub mod kernel;
 
 fn main() {
     let cli = Cli::parse();
@@ -18,11 +23,14 @@ fn main() {
         .config
         .and_then(|p| Config::load(p).ok())
         .unwrap_or(Config::default());
+    let kernel = Kernel::new(config.clone());
 
     match &cli.command {
         Commands::Build => {
-            println!("{:?}", config);
-            println!("exec build")
+            build(&kernel, config).map_err(|e| {
+                eprintln!("{}", e);
+                process::exit(1)
+            }).unwrap();
         }
     }
 }
