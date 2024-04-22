@@ -12,3 +12,9 @@ pub enum WriteFileError {
 pub trait Distributor {
     fn write(&self, dist_path: impl Into<PathBuf>, body: impl Into<String>) -> Result<()>;
 }
+
+pub trait HaveDistributor {
+    type Distributor: Distributor + Send + Sync + 'static;
+
+    fn distributor(&self) -> &Self::Distributor;
+}
