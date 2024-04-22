@@ -1,8 +1,8 @@
 use std::fs::read_to_string;
 use std::path::PathBuf;
 
-use anyhow::{bail, Context, Result};
-use glob::{glob, Paths};
+use anyhow::{Context, Result};
+use glob::glob;
 use thiserror::Error;
 
 use crate::article::entity::{Article, ArticleId};
